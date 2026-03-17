@@ -1,0 +1,51 @@
+Business Source License 1.1
+
+Licensor: lita-hiroto
+Licensed Work: secure-agent-core
+Additional Use Grant: You may use the Licensed Work for any purpose except
+  offering it as a commercial AI agent security SaaS or incorporating it into
+  a product that directly competes with the Licensed Work.
+Change Date: January 1, 2030
+Change License: Apache License, Version 2.0
+
+---
+
+Parameters
+
+Licensor: lita-hiroto
+Licensed Work: secure-agent-core version 1.0 and later versions of the
+  Licensed Work until the Change Date.
+
+Additional Use Grant:
+  You may make use of the Licensed Work, provided that you may not use the
+  Licensed Work for a Competing Use. A "Competing Use" means providing a
+  commercial product or service that offers the same or substantially similar
+  functionality as the Licensed Work to third parties, including but not
+  limited to AI agent security SaaS platforms, prompt injection protection
+  services, or AI output filtering platforms.
+
+  For clarity, the following are NOT Competing Uses and are freely permitted:
+  - Internal use within your own organization
+  - Embedding in client deliverables (where you are not selling the
+    security layer itself as the primary product)
+  - Research, education, and personal projects
+  - Self-hosted deployments
+
+Change Date: The earlier of January 1, 2030 or a date specified at
+  https://github.com/lita-hiroto/secure-agent-core
+
+Change License: Apache License, Version 2.0
+
+For information about alternative licensing arrangements, contact:
+  contact@aievid.com
+
+---
+
+Notice
+
+The Business Source License (this document, or the "License") is not an
+Open Source license. However, the Licensed Work will eventually be made
+available under an Open Source License, as stated in this License.
+
+License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
+"Business Source License" is a trademark of MariaDB Corporation Ab.

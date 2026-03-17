@@ -1,0 +1,33 @@
+name: Feature Request
+description: Suggest a new detection pattern or capability
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      placeholder: Describe the security gap or use case.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      placeholder: Describe your idea. Code examples welcome.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Relevant module
+      options:
+        - InputGuard
+        - OutputGuard
+        - RuleOfTwo
+        - AuditLogger
+        - REST API
+        - Other
+    validations:
+      required: true
