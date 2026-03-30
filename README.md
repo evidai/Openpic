@@ -1,5 +1,7 @@
 # secure-agent-core
 
+https://github.com/user-attachments/assets/c8842e97-c4ba-4a22-a1fd-821df4ffe633
+
 **Model-agnostic security layer for AI agents.**  
 Drop it in front of any LLM — Claude, OpenAI, LangChain, CrewAI — and get prompt injection protection, PII redaction, and policy enforcement in one package.
 
@@ -13,7 +15,15 @@ Drop it in front of any LLM — Claude, OpenAI, LangChain, CrewAI — and get pr
   Your AI Agent  ← Claude / OpenAI / any model
 └──────┬──────┘
 ┌──────▼──────┐
-│Output Guard │  ← redacts emails, API keys, PII before returning to user
+│Output Guard │  ← redacts emails,
+
+https://github.com/user-attachments/assets/65155d7d-fb80-425f-b0b6-24857b9822ef
+
+
+
+https://github.com/user-attachments/assets/ef776bf7-056f-416d-80b0-84c4e8b17224
+
+ API keys, PII before returning to user
 └──────┬──────┘
        ↓
 [Safe Output]
