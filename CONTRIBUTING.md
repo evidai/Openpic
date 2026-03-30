@@ -41,3 +41,7 @@ cd secure-agent-core
 pip install -e ".[dev,api]"
 python tests/test_all.py
 ```
+
+
+https://github.com/user-attachments/assets/6f7533d7-aec6-4763-a0b7-f5fc382a8e7f
+
