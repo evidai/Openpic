@@ -1,40 +1,62 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "secure-agent-core"
-version = "0.1.0"
-description = "Model-agnostic security layer for AI agents — prompt injection protection, PII redaction, and policy enforcement"
+version = "2.0.0"
+description = "Model-agnostic security layer for AI agents"
 readme = "README.md"
-license = {file = "LICENSE"}
+requires-python = ">=3.9"
+license = {text = "Business Source License 1.1"}
 authors = [
-  {name = "lita-hiroto", email = "contact@aievid.com"}
+    {name = "Evid AI", email = "support@evidai.com"}
 ]
-keywords = ["ai", "security", "llm", "agent", "prompt-injection", "pii", "guardrails"]
-classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Intended Audience :: Developers",
-  "Topic :: Security",
-  "Topic :: Scientific/Engineering :: Artificial Intelligence",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-]
-requires-python = ">=3.10"
 dependencies = [
-  "pydantic>=2.0",
+    "fastapi>=0.104.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.24.0",
+    "websockets>=11.0",
+    "python-multipart>=0.0.6",
+    "uvicorn>=0.23.0",
 ]
 
 [project.optional-dependencies]
-api = ["fastapi>=0.110", "uvicorn>=0.29"]
-dev = ["pytest>=8.0", "httpx>=0.27"]
+api = [
+    "uvicorn>=0.23.0",
+    "fastapi>=0.104.0",
+]
+dashboard = [
+    "httpx>=0.24.0",
+    "websockets>=11.0",
+]
+sdk = [
+    "httpx>=0.24.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
+all = [
+    "httpx>=0.24.0",
+    "websockets>=11.0",
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "uvicorn>=0.23.0",
+]
 
 [project.urls]
-Homepage = "https://github.com/lita-hiroto/secure-agent-core"
-Documentation = "https://github.com/lita-hiroto/secure-agent-core#readme"
-Issues = "https://github.com/lita-hiroto/secure-agent-core/issues"
+Homepage = "https://github.com/evidai/Openpic"
+Documentation = "https://docs.openpic.ai"
+Repository = "https://github.com/evidai/Openpic"
+Issues = "https://github.com/evidai/Openpic/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+asyncio_mode = "auto"
