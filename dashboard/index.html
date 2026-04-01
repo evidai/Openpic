@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Pic - Enterprise AI Security Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+    }
+    
+    .glass {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    
+    .glow {
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes slide-in {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .slide-in {
+      animation: slide-in 0.3s ease-out;
+    }
+    
+    .cyber-grid {
+      background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+  </style>
+</head>
+<body class="gradient-bg min-h-screen text-white">
+  
+  <!-- Cyber Grid Background -->
+  <div class="fixed inset-0 cyber-grid opacity-30 pointer-events-none"></div>
+  
+  <!-- Main Container -->
+  <div class="relative z-10">
+    
+    <!-- Top Navigation -->
+    <nav class="glass sticky top-0 z-50">
+      <div class="max-w-[1920px] mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          
+          <!-- Logo -->
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center glow">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse-slow"></div>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                Open Pic
+              </h1>
+              <p class="text-xs text-slate-400">secure-agent-core v2.0</p>
+            </div>
+          </div>
+          
+          <!-- Nav Tabs -->
+          <div class="flex items-center space-x-2">
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn active px-4 py-2 rounded-lg text-sm font-medium transition-all">
+              <span class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span>Dashboard</span>
+              </span>
+            </button>
+            <button onclick="switchTab('threats')" id="tab-threats" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all">
+              <span class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <span>Threats</span>
+              </span>
+            </button>
+            <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all">
+              <span class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span>Analytics</span>
+              </span>
+            </button>
+            <button onclick="switchTab('compliance')" id="tab-compliance" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all">
+              <span class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span>Compliance</span>
+              </span>
+            </button>
+            <button onclick="switchTab('integrations')" id="tab-integrations" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all">
+              <span class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                </svg>
+                <span>Integrations</span>
+              </span>
+            </button>
+          </div>
+          
+          <!-- Right Section -->
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2 px-3 py-2 glass rounded-lg">
+              <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span class="text-sm text-slate-300">Live</span>
+            </div>
+            <button class="relative p-2 glass rounded-lg hover:bg-slate-700/50 transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+              </svg>
+              <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold cursor-pointer">
+              JP
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="max-w-[1920px] mx-auto px-6 py-8">
+      
+      <!-- Dashboard Tab -->
+      <div id="content-dashboard" class="tab-content">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-3xl font-bold mb-2">Security Command Center</h2>
+            <p class="text-slate-400">Real-time AI agent security monitoring and threat intelligence</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <select class="px-4 py-2 glass rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+              <option>Last Hour</option>
+              <option selected>Last 24 Hours</option>
+              <option>Last 7 Days</option>
+              <option>Last 30 Days</option>
+            </select>
+            <select class="px-4 py-2 glass rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+              <option>All Tenants</option>
+              <option>Finance Corp</option>
+              <option>HealthTech Inc</option>
+              <option>Gov Agency</option>
+            </select>
+            <button class="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all font-medium">
+              Export Report
+            </button>
+          </div>
+        </div>
+        
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-4 gap-6 mb-8">
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-green-400">+12.5%</span>
+            </div>
+            <div class="text-3xl font-bold mb-1" id="metric-requests">2,847,392</div>
+            <div class="text-sm text-slate-400">Total Requests</div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-red-400">+8.2%</span>
+            </div>
+            <div class="text-3xl font-bold mb-1" id="metric-threats">1,247</div>
+            <div class="text-sm text-slate-400">Threats Blocked</div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-green-400">-5.3%</span>
+            </div>
+            <div class="text-3xl font-bold mb-1" id="metric-pii">834</div>
+            <div class="text-sm text-slate-400">PII Detected</div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-green-400">-2.1ms</span>
+            </div>
+            <div class="text-3xl font-bold mb-1">12.5ms</div>
+            <div class="text-sm text-slate-400">Avg Response Time</div>
+          </div>
+        </div>
+        
+        <!-- Main Grid -->
+        <div class="grid grid-cols-3 gap-6">
+          
+          <!-- Real-time Threat Feed -->
+          <div class="col-span-2 glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-xl font-bold flex items-center space-x-2">
+                <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <span>Live Threat Detection</span>
+              </h3>
+              <div class="flex items-center space-x-2 text-sm text-slate-400">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span>Live</span>
+              </div>
+            </div>
+            
+            <div id="threat-feed" class="space-y-3 max-h-[500px] overflow-y-auto scrollbar-hide">
+              <!-- Threats will be inserted here dynamically -->
+            </div>
+          </div>
+          
+          <!-- Sidebar -->
+          <div class="space-y-6">
+            
+            <!-- Active Alerts -->
+            <div class="glass rounded-2xl p-6">
+              <h3 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <span>Active Alerts</span>
+              </h3>
+              
+              <div class="space-y-3">
+                <div class="p-3 bg-red-500/10 rounded-lg border-l-4 border-l-red-500">
+                  <p class="text-sm text-white font-medium">Critical: Prompt injection detected</p>
+                  <p class="text-xs text-slate-400 mt-1">2 minutes ago</p>
+                </div>
+                <div class="p-3 bg-orange-500/10 rounded-lg border-l-4 border-l-orange-500">
+                  <p class="text-sm text-white font-medium">High: Multiple PII exposures</p>
+                  <p class="text-xs text-slate-400 mt-1">15 minutes ago</p>
+                </div>
+                <div class="p-3 bg-yellow-500/10 rounded-lg border-l-4 border-l-yellow-500">
+                  <p class="text-sm text-white font-medium">Medium: Unusual traffic pattern</p>
+                  <p class="text-xs text-slate-400 mt-1">1 hour ago</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Model Distribution -->
+            <div class="glass rounded-2xl p-6">
+              <h3 class="text-lg font-bold mb-4">Model Distribution</h3>
+              <canvas id="modelChart" class="w-full" height="200"></canvas>
+            </div>
+            
+          </div>
+        </div>
+        
+        <!-- Security Posture -->
+        <div class="grid grid-cols-3 gap-6 mt-8">
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-medium">Prompt Injection Protection</h3>
+              <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span class="text-xs text-green-400 font-medium">ACTIVE</span>
+              </div>
+            </div>
+            <div class="text-3xl font-bold mb-2">99.7%</div>
+            <div class="text-sm text-slate-400">Coverage • Updated 2 mins ago</div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-medium">PII Masking</h3>
+              <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span class="text-xs text-green-400 font-medium">ACTIVE</span>
+              </div>
+            </div>
+            <div class="text-3xl font-bold mb-2">100%</div>
+            <div class="text-sm text-slate-400">Coverage • Real-time</div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-medium">Audit Logging</h3>
+              <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span class="text-xs text-green-400 font-medium">ACTIVE</span>
+              </div>
+            </div>
+            <div class="text-3xl font-bold mb-2">100%</div>
+            <div class="text-sm text-slate-400">Coverage • Continuous</div>
+          </div>
+        </div>
+        
+      </div>
+      
+      <!-- Threats Tab -->
+      <div id="content-threats" class="tab-content hidden">
+        <h2 class="text-3xl font-bold mb-6">Threat Intelligence Center</h2>
+        
+        <!-- Stats -->
+        <div class="grid grid-cols-4 gap-4 mb-8">
+          <div class="glass rounded-xl p-4 border-l-4 border-l-red-500">
+            <div class="text-sm text-red-400 mb-2">Critical</div>
+            <div class="text-3xl font-bold">42</div>
+          </div>
+          <div class="glass rounded-xl p-4 border-l-4 border-l-orange-500">
+            <div class="text-sm text-orange-400 mb-2">High</div>
+            <div class="text-3xl font-bold">127</div>
+          </div>
+          <div class="glass rounded-xl p-4 border-l-4 border-l-yellow-500">
+            <div class="text-sm text-yellow-400 mb-2">Medium</div>
+            <div class="text-3xl font-bold">384</div>
+          </div>
+          <div class="glass rounded-xl p-4 border-l-4 border-l-blue-500">
+            <div class="text-sm text-blue-400 mb-2">Low</div>
+            <div class="text-3xl font-bold">694</div>
+          </div>
+        </div>
+        
+        <!-- Threat Table -->
+        <div class="glass rounded-2xl overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Timestamp</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Threat Type</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Model</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Severity</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Action</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Details</th>
+              </tr>
+            </thead>
+            <tbody id="threat-table" class="divide-y divide-slate-700/50">
+              <!-- Threats will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Analytics Tab -->
+      <div id="content-analytics" class="tab-content hidden">
+        <h2 class="text-3xl font-bold mb-6">Advanced Analytics</h2>
+        
+        <div class="grid grid-cols-2 gap-6 mb-6">
+          <div class="glass rounded-2xl p-6">
+            <h3 class="text-xl font-bold mb-6">Threat Trends (24h)</h3>
+            <canvas id="trendChart" class="w-full" height="300"></canvas>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <h3 class="text-xl font-bold mb-6">Attack Vector Distribution</h3>
+            <canvas id="vectorChart" class="w-full" height="300"></canvas>
+          </div>
+        </div>
+        
+        <div class="glass rounded-2xl p-6">
+          <h3 class="text-xl font-bold mb-6">Security Score Over Time</h3>
+          <canvas id="securityScoreChart" class="w-full" height="200"></canvas>
+        </div>
+      </div>
+      
+      <!-- Compliance Tab -->
+      <div id="content-compliance" class="tab-content hidden">
+        <h2 class="text-3xl font-bold mb-6">Compliance Center</h2>
+        
+        <div class="grid grid-cols-3 gap-6 mb-8">
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="text-3xl">🏥</div>
+                <div>
+                  <h3 class="text-lg font-bold">HIPAA</h3>
+                  <p class="text-sm text-slate-400">Coverage: 100%</p>
+                </div>
+              </div>
+              <div class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
+                COMPLIANT
+              </div>
+            </div>
+            <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden mb-4">
+              <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full" style="width: 100%"></div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-slate-400">
+              <span>Last audit: 2 weeks ago</span>
+              <button class="text-cyan-400 hover:text-cyan-300 font-medium">View Report →</button>
+            </div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="text-3xl">🇪🇺</div>
+                <div>
+                  <h3 class="text-lg font-bold">GDPR</h3>
+                  <p class="text-sm text-slate-400">Coverage: 100%</p>
+                </div>
+              </div>
+              <div class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
+                COMPLIANT
+              </div>
+            </div>
+            <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden mb-4">
+              <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full" style="width: 100%"></div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-slate-400">
+              <span>Last audit: 1 month ago</span>
+              <button class="text-cyan-400 hover:text-cyan-300 font-medium">View Report →</button>
+            </div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="text-3xl">🔒</div>
+                <div>
+                  <h3 class="text-lg font-bold">SOC 2 Type II</h3>
+                  <p class="text-sm text-slate-400">Coverage: 87%</p>
+                </div>
+              </div>
+              <div class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-medium">
+                IN PROGRESS
+              </div>
+            </div>
+            <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden mb-4">
+              <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full" style="width: 87%"></div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-slate-400">
+              <span>Last audit: 3 days ago</span>
+              <button class="text-cyan-400 hover:text-cyan-300 font-medium">View Report →</button>
+            </div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="text-3xl">💳</div>
+                <div>
+                  <h3 class="text-lg font-bold">PCI DSS</h3>
+                  <p class="text-sm text-slate-400">Coverage: 100%</p>
+                </div>
+              </div>
+              <div class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
+                COMPLIANT
+              </div>
+            </div>
+            <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden mb-4">
+              <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full" style="width: 100%"></div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-slate-400">
+              <span>Last audit: 1 week ago</span>
+              <button class="text-cyan-400 hover:text-cyan-300 font-medium">View Report →</button>
+            </div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="text-3xl">🏛️</div>
+                <div>
+                  <h3 class="text-lg font-bold">FedRAMP</h3>
+                  <p class="text-sm text-slate-400">Coverage: 65%</p>
+                </div>
+              </div>
+              <div class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-medium">
+                IN PROGRESS
+              </div>
+            </div>
+            <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden mb-4">
+              <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full" style="width: 65%"></div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-slate-400">
+              <span>Last audit: 5 days ago</span>
+              <button class="text-cyan-400 hover:text-cyan-300 font-medium">View Report →</button>
+            </div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="text-3xl">🛡️</div>
+                <div>
+                  <h3 class="text-lg font-bold">NIST AI RMF</h3>
+                  <p class="text-sm text-slate-400">Coverage: 95%</p>
+                </div>
+              </div>
+              <div class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
+                COMPLIANT
+              </div>
+            </div>
+            <div class="relative h-2 bg-slate-700/50 rounded-full overflow-hidden mb-4">
+              <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full" style="width: 95%"></div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-slate-400">
+              <span>Last audit: 4 days ago</span>
+              <button class="text-cyan-400 hover:text-cyan-300 font-medium">View Report →</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Audit Log -->
+        <div class="glass rounded-2xl p-6">
+          <h3 class="text-xl font-bold mb-6">Recent Audit Events</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-700/30">
+              <div class="flex items-center space-x-4">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <div>
+                  <p class="text-white font-medium">HIPAA compliance check completed</p>
+                  <p class="text-sm text-slate-400">By System • 2 hours ago</p>
+                </div>
+              </div>
+              <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">PASSED</span>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-700/30">
+              <div class="flex items-center space-x-4">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <div>
+                  <p class="text-white font-medium">PII detection rule updated</p>
+                  <p class="text-sm text-slate-400">By admin@company.com • 5 hours ago</p>
+                </div>
+              </div>
+              <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">PASSED</span>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-700/30">
+              <div class="flex items-center space-x-4">
+                <div class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                <div>
+                  <p class="text-white font-medium">SOC 2 Type II audit initiated</p>
+                  <p class="text-sm text-slate-400">By auditor@firm.com • 1 day ago</p>
+                </div>
+              </div>
+              <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-medium">IN PROGRESS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Integrations Tab -->
+      <div id="content-integrations" class="tab-content hidden">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-3xl font-bold mb-2">Integrations Hub</h2>
+            <p class="text-slate-400">Connect with your favorite tools and LLM providers</p>
+          </div>
+          <button class="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all font-medium">
+            Browse Marketplace
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-4 gap-6">
+          <div class="glass rounded-2xl p-6 hover:border-cyan-500/30 transition-all">
+            <div class="flex items-start justify-between mb-4">
+              <div class="text-4xl">🤖</div>
+              <div class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">CONNECTED</div>
+            </div>
+            <h3 class="text-lg font-bold mb-2">OpenAI</h3>
+            <p class="text-sm text-slate-400 mb-4">GPT-4, GPT-3.5</p>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-400">Requests (24h)</span>
+              <span class="text-cyan-400 font-medium">12.5K</span>
+            </div>
+            <button class="w-full mt-4 px-4 py-2 bg-slate-700/30 hover:bg-slate-700/50 text-slate-300 rounded-lg transition-all">
+              Configure
+            </button>
+          </div>
+          
+          <div class="glass rounded-2xl p-6 hover:border-cyan-500/30 transition-all">
+            <div class="flex items-start justify-between mb-4">
+              <div class="text-4xl">🧠</div>
+              <div class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">CONNECTED</div>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Anthropic</h3>
+            <p class="text-sm text-slate-400 mb-4">Claude 3 Opus, Sonnet</p>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-400">Requests (24h)</span>
+              <span class="text-cyan-400 font-medium">8.2K</span>
+            </div>
+            <button class="w-full mt-4 px-4 py-2 bg-slate-700/30 hover:bg-slate-700/50 text-slate-300 rounded-lg transition-all">
+              Configure
+            </button>
+          </div>
+          
+          <div class="glass rounded-2xl p-6 hover:border-cyan-500/30 transition-all">
+            <div class="flex items-start justify-between mb-4">
+              <div class="text-4xl">🔷</div>
+              <div class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">CONNECTED</div>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Google</h3>
+            <p class="text-sm text-slate-400 mb-4">Gemini Pro, Ultra</p>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-400">Requests (24h)</span>
+              <span class="text-cyan-400 font-medium">5.8K</span>
+            </div>
+            <button class="w-full mt-4 px-4 py-2 bg-slate-700/30 hover:bg-slate-700/50 text-slate-300 rounded-lg transition-all">
+              Configure
+            </button>
+          </div>
+          
+          <div class="glass rounded-2xl p-6 hover:border-cyan-500/30 transition-all">
+            <div class="flex items-start justify-between mb-4">
+              <div class="text-4xl">☁️</div>
+              <div class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">CONNECTED</div>
+            </div>
+            <h3 class="text-lg font-bold mb-2">AWS</h3>
+            <p class="text-sm text-slate-400 mb-4">Bedrock, SageMaker</p>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-400">Requests (24h)</span>
+              <span class="text-cyan-400 font-medium">15.3K</span>
+            </div>
+            <button class="w-full mt-4 px-4 py-2 bg-slate-700/30 hover:bg-slate-700/50 text-slate-300 rounded-lg transition-all">
+              Configure
+            </button>
+          </div>
+        </div>
+        
+        <!-- API Documentation -->
+        <div class="glass rounded-2xl p-6 mt-8">
+          <h3 class="text-xl font-bold mb-6 flex items-center space-x-2">
+            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+            <span>API Integration</span>
+          </h3>
+          
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <h4 class="text-sm font-medium text-slate-400 mb-3">Quick Start</h4>
+              <pre class="text-sm bg-slate-950/50 p-4 rounded-lg overflow-x-auto"><code class="text-cyan-400">curl -X POST https://api.openpic.ai/v2/llm/secure-call \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "provider": "openai",
+    "model": "gpt-4",
+    "prompt": "Hello, world!",
+    "max_tokens": 1000
+  }'</code></pre>
+            </div>
+            
+            <div>
+              <h4 class="text-sm font-medium text-slate-400 mb-3">Response</h4>
+              <pre class="text-sm bg-slate-950/50 p-4 rounded-lg overflow-x-auto"><code class="text-green-400">{
+  "response": "Hello! How can I help?",
+  "provider": "openai",
+  "model": "gpt-4",
+  "latency_ms": 142.5,
+  "security_checks": {
+    "input_safe": true,
+    "output_safe": true,
+    "pii_redacted": 0
+  }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </main>
+  </div>
+  
+  <script>
+    // Tab switching
+    function switchTab(tabName) {
+      // Hide all content
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      // Remove active from all buttons
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('active', 'bg-gradient-to-r', 'from-cyan-500/20', 'to-blue-500/20', 'text-cyan-400', 'border', 'border-cyan-500/30');
+        el.classList.add('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-800/50');
+      });
+      
+      // Show selected content
+      document.getElementById('content-' + tabName).classList.remove('hidden');
+      // Add active to selected button
+      const activeBtn = document.getElementById('tab-' + tabName);
+      activeBtn.classList.add('active', 'bg-gradient-to-r', 'from-cyan-500/20', 'to-blue-500/20', 'text-cyan-400', 'border', 'border-cyan-500/30');
+      activeBtn.classList.remove('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-800/50');
+    }
+    
+    // Generate mock threats
+    const threatTypes = ['Prompt Injection', 'PII Leakage', 'Data Exfiltration', 'Jailbreak Attempt', 'Command Override'];
+    const severities = ['critical', 'high', 'medium', 'low'];
+    const models = ['GPT-4', 'Claude 3 Opus', 'Gemini Pro', 'GPT-3.5'];
+    const tenants = ['Finance Corp', 'HealthTech Inc', 'Gov Agency'];
+    const actions = ['blocked', 'allowed'];
+    
+    function generateThreat() {
+      return {
+        type: threatTypes[Math.floor(Math.random() * threatTypes.length)],
+        severity: severities[Math.floor(Math.random() * severities.length)],
+        model: models[Math.floor(Math.random() * models.length)],
+        tenant: tenants[Math.floor(Math.random() * tenants.length)],
+        action: actions[Math.floor(Math.random() * actions.length)],
+        timestamp: new Date()
+      };
+    }
+    
+    function formatTime(date) {
+      const diff = Math.floor((new Date() - date) / 1000);
+      if (diff < 60) return `${diff}s ago`;
+      if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+      return `${Math.floor(diff / 3600)}h ago`;
+    }
+    
+    function getSeverityColor(severity) {
+      const colors = {
+        critical: 'border-l-red-500 bg-red-500/5',
+        high: 'border-l-orange-500 bg-orange-500/5',
+        medium: 'border-l-yellow-500 bg-yellow-500/5',
+        low: 'border-l-blue-500 bg-blue-500/5'
+      };
+      return colors[severity];
+    }
+    
+    function getSeverityBadge(severity) {
+      const badges = {
+        critical: 'bg-red-500/20 text-red-400',
+        high: 'bg-orange-500/20 text-orange-400',
+        medium: 'bg-yellow-500/20 text-yellow-400',
+        low: 'bg-blue-500/20 text-blue-400'
+      };
+      return badges[severity];
+    }
+    
+    function addThreatToFeed(threat) {
+      const feed = document.getElementById('threat-feed');
+      const threatEl = document.createElement('div');
+      threatEl.className = `p-4 bg-slate-900/50 rounded-lg border-l-4 ${getSeverityColor(threat.severity)} hover:bg-slate-900/70 transition-all slide-in`;
+      threatEl.innerHTML = `
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1">
+            <div class="flex items-center space-x-2 mb-1">
+              <span class="font-medium text-white">${threat.type}</span>
+              <span class="px-2 py-1 ${getSeverityBadge(threat.severity)} rounded text-xs font-medium uppercase">${threat.severity}</span>
+            </div>
+            <div class="text-sm text-slate-400 space-x-3">
+              <span>${threat.model}</span>
+              <span>•</span>
+              <span>${threat.tenant}</span>
+              <span>•</span>
+              <span>${formatTime(threat.timestamp)}</span>
+            </div>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-medium ${threat.action === 'blocked' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}">
+            ${threat.action.toUpperCase()}
+          </span>
+        </div>
+      `;
+      
+      feed.insertBefore(threatEl, feed.firstChild);
+      
+      // Keep only latest 10
+      while (feed.children.length > 10) {
+        feed.removeChild(feed.lastChild);
+      }
+    }
+    
+    function addThreatToTable(threat) {
+      const table = document.getElementById('threat-table');
+      const row = document.createElement('tr');
+      row.className = 'hover:bg-slate-800/30 transition-colors';
+      row.innerHTML = `
+        <td class="px-6 py-4 text-sm text-slate-300">${formatTime(threat.timestamp)}</td>
+        <td class="px-6 py-4"><span class="px-3 py-1 bg-slate-700/50 text-cyan-400 rounded-full text-xs font-medium">${threat.type}</span></td>
+        <td class="px-6 py-4 text-sm text-slate-300">${threat.model}</td>
+        <td class="px-6 py-4"><span class="px-2 py-1 ${getSeverityBadge(threat.severity)} rounded text-xs font-medium uppercase">${threat.severity}</span></td>
+        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-medium ${threat.action === 'blocked' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}">${threat.action}</span></td>
+        <td class="px-6 py-4"><button class="text-cyan-400 hover:text-cyan-300 text-sm font-medium">View →</button></td>
+      `;
+      
+      table.insertBefore(row, table.firstChild);
+      
+      while (table.children.length > 50) {
+        table.removeChild(table.lastChild);
+      }
+    }
+    
+    // Generate threats periodically
+    setInterval(() => {
+      const threat = generateThreat();
+      addThreatToFeed(threat);
+      addThreatToTable(threat);
+      
+      // Update metrics
+      const currentThreats = parseInt(document.getElementById('metric-threats').textContent.replace(/,/g, ''));
+      document.getElementById('metric-threats').textContent = (currentThreats + 1).toLocaleString();
+    }, 3000);
+    
+    // Initialize with some threats
+    for (let i = 0; i < 10; i++) {
+      const threat = generateThreat();
+      addThreatToFeed(threat);
+      addThreatToTable(threat);
+    }
+    
+    // Charts
+    const modelChartCtx = document.getElementById('modelChart');
+    if (modelChartCtx) {
+      new Chart(modelChartCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['GPT-4', 'Claude 3 Opus', 'Gemini Pro', 'GPT-3.5'],
+          datasets: [{
+            data: [45, 30, 15, 10],
+            backgroundColor: ['#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#cbd5e1', padding: 15 }
+            }
+          }
+        }
+      });
+    }
+    
+    const trendChartCtx = document.getElementById('trendChart');
+    if (trendChartCtx) {
+      new Chart(trendChartCtx, {
+        type: 'line',
+        data: {
+          labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+          datasets: [
+            {
+              label: 'Critical',
+              data: Array.from({length: 24}, () => Math.floor(Math.random() * 10)),
+              borderColor: '#ef4444',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              fill: true,
+              tension: 0.4
+            },
+            {
+              label: 'High',
+              data: Array.from({length: 24}, () => Math.floor(Math.random() * 20)),
+              borderColor: '#f97316',
+              backgroundColor: 'rgba(249, 115, 22, 0.1)',
+              fill: true,
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#cbd5e1' }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, 0.1)' } },
+            y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, 0.1)' } }
+          }
+        }
+      });
+    }
+    
+    const vectorChartCtx = document.getElementById('vectorChart');
+    if (vectorChartCtx) {
+      new Chart(vectorChartCtx, {
+        type: 'bar',
+        data: {
+          labels: threatTypes,
+          datasets: [{
+            label: 'Occurrences',
+            data: [42, 38, 27, 19, 15],
+            backgroundColor: 'rgba(6, 182, 212, 0.8)',
+            borderColor: '#06b6d4',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+            y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, 0.1)' } }
+          }
+        }
+      });
+    }
+    
+    const securityScoreChartCtx = document.getElementById('securityScoreChart');
+    if (securityScoreChartCtx) {
+      new Chart(securityScoreChartCtx, {
+        type: 'line',
+        data: {
+          labels: Array.from({length: 30}, (_, i) => `Day ${i + 1}`),
+          datasets: [{
+            label: 'Security Score',
+            data: Array.from({length: 30}, () => 85 + Math.random() * 10),
+            borderColor: '#06b6d4',
+            backgroundColor: 'rgba(6, 182, 212, 0.1)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, 0.1)' } },
+            y: { 
+              ticks: { color: '#94a3b8' }, 
+              grid: { color: 'rgba(148, 163, 184, 0.1)' },
+              min: 80,
+              max: 100
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
